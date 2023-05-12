@@ -1,0 +1,31 @@
+﻿@page
+@model ExampleRazorPizzariaProject.Pages.PizzasModel
+@{
+	ViewData["Title"] = "Pizzas";
+}
+
+<div class="text-center">
+	<div>
+		<h1>Menu</h1>
+		<h4 class="mt-4">Choose one or try our pizza builder. Then just click Order and relax!</h4>
+		<p class="text-muted w-100 mt-2" style="text-align: right;"><i>*Only one pizza per order.</i></p>
+	</div>
+	<div class="container primary-red" style="border-radius: .25rem;">
+		<div class="row">
+			<div class="col-12 mb-2 mt-2">
+				<div class="row w-100">
+					<div class="col-4">
+						<img class="w-100" src="images/dogsCook.png" />
+					</div>
+					<div class="col-8 align-items-center">
+						<div class="align-middle">
+							<h3 style="text-align:left">Are you feeling creative today? How about creating your very own pizza flavor?</h3>
+							<p style="text-align:left">The possibilities are endless! You could go for classic toppings like pepperoni and mushrooms, or you could get adventurous and try something new. How about roasted garlic, caramelized onions, or sliced avocado? Oh and don't forget the cheese.</p>
+							<a class="btn btn-outline-warning" style="float:right" asp-page="Forms/CustomPizza">Yes, baby! Let's do it! <img src="~/images/pizza.png" class="objectSpin" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

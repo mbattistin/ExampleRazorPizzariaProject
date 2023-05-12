@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ExampleRazorPizzariaProject.Pages
 {
-    public class PizzaModel : PageModel
+    public class PizzasModel : PageModel
     {
         public void OnGet()
         {
+
         }
     }
 }

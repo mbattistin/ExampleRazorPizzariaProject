@@ -17,3 +17,19 @@ body {
   margin-bottom: 60px;
 }
 
+.primary-red {
+    border-color: rgb(189, 84, 58);
+    background-color: rgb(189, 84, 58);
+    color:white;
+}
+
+.custom-checkbox-color:checked {
+    border-color: #ffc107;
+    background-color: #ffc107;
+}
+
+.custom-checkbox-color:focus {
+    border-color: #ffc107;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem #ffe38f;
+}
