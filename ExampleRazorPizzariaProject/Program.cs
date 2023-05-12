@@ -1,8 +1,12 @@
+using ExampleRazorPizzariaProject.Data;
+using MySql.Data.MySqlClient;
+
 var builder = WebApplication.CreateBuilder(args);
 
+var connection = new MySqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"));
 // Add services to the container.
 builder.Services.AddRazorPages();
-
+builder.Services.AddTransient<IDataRepository>(s => new DataRepository(connection));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

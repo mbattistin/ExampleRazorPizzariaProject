@@ -1,4 +1,50 @@
 ﻿@page
+
 @model ExampleRazorPizzariaProject.Pages.Forms.CustomPizzaModel
 @{
+		ViewData["Title"] = "Custom Pizza";
+}
+	<div class="container">
+		<h1 class="text-center">Create your own pizza! YEEEY!</h1>
+		<form method="post">
+			<h4 class="mt-4">Use your imagination and choose the toppings bellow that you would like to add in your pizza. Any combination is possible.</h4>
+			<p class="text-muted w-100 mt-2" style="text-align: right;"><i>*The base price of the pizza is €@Model.BasePricePizza and the toppings increment this price.</i></p>
+
+			<div class="card mt-2 mb-2">
+				<div class="card-header primary-red fw-bold">
+					Toppings
+				</div>
+				<div class="card-body">
+					<div class="row">
+						@foreach (var topping in Model.AvailableToppings)
+					{
+						<div class="col-6" style="font-size:20px">
+							<div class="form-check">
+								<input class="form-check-input custom-checkbox-color chkclass" type="checkbox" value="">
+								<label class="form-check-label">
+									@topping.Name + €<span class="sum valueToSum">@topping.ToppingAditionalPrice</span>
+								</label>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+			<div class="card-footer primary-red">
+				<span class="fw-bold" style="vertical-align: middle;"> Total Price: €<label id="sum">@Model.BasePricePizza</label></span>
+				<a class="btn btn-outline-warning" style="float:right" asp-page="Pizzas">Order now! <img src="~/images/pizza.png" class="objectSpin" /></a>
+			</div>
+		</div>
+	</form>
+</div>
+
+@section Scripts{
+	<script>
+		$('.chkclass').click(function() {
+			var sum = @Model.BasePricePizza;
+			$('.chkclass:checked').each(function() {
+				sum += parseFloat($(this).closest('div').find('.valueToSum').text());
+			});
+			$('#sum').text(sum);
+		});</script>
+
 }
