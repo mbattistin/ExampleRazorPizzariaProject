@@ -1,4 +1,49 @@
 ﻿@page
 @model ExampleRazorPizzariaProject.Pages.Checkout.CheckoutModel
+
 @{
+	ViewData["Title"] = "Checkout Pizza";
 }
+<div class="container">
+	<h1 class="text-center">Your order is on the way, @Model.Order.CustomerName!</h1>
+	<h5 class="text-center">Delivery address: @Model.Order.Address</h5>
+	<div class="row" style="align-items: end;">
+		<div class="col-md-4 col-sm-12 p-0 m-0" style="text-align: right;">
+			<img src="/images/deliveryCat.png" style="width:15em; height:auto;" />
+		</div>
+		<div class="col-md-6 col-sm-12 p-0 m-0">
+			<div class="card mt-2">
+				<div class="card-header primary-red fw-bold">
+					Details
+				</div>
+				<div class="card-body">
+					<div class="row">
+						@if (Model.Pizza != null)
+						{
+							<div class="col-6">@Model.Pizza.Name</div>
+							<div class="col-6">€@Model.Pizza.Price</div>
+						}
+						else
+						{
+							<div class="col-6">Custom pizza</div>
+							<div class="col-6">€@Model.BasePricePizza</div>
+						}
+						@if (Model.SelectedToppings?.Count() > 0)
+						{
+							<div class="col-12 fw-bold mt-2">Extra Toppings:</div>
+							@foreach (var topping in Model.SelectedToppings)
+							{
+								<div class="col-6">@topping.Name</div>
+								<div class="col-6">€@topping.ToppingAditionalPrice</div>
+							}
+						}
+					</div>
+				</div>
+				<div class="card-footer primary-red">
+					<span class="fw-bold" style="vertical-align: middle;"> Total Price: €<label id="sum">@Model.Order.TotalPrice</label></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
