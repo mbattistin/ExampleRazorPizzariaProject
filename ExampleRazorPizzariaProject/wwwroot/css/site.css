@@ -1,26 +1,26 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .primary-red {
     border-color: rgb(189, 84, 58);
     background-color: rgb(189, 84, 58);
-    color:white;
+    color: white;
 }
 
 .custom-checkbox-color:checked {
