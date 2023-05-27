@@ -24,5 +24,31 @@ namespace ExampleRazorPizzariaProject.Data
                 return new List<T>();
             }
         }
+
+        public async Task<T> SaveAsync<T>(string sqlCommand)
+        {
+            try
+            {
+                return  (T)await Connection.ExecuteScalarAsync(sqlCommand);
+            }
+            catch 
+            {
+                return default;
+            }
+
+        }
+
+        public async Task<T> GetAsync<T>(string sqlCommand)
+        {
+            try
+            {
+                return await Connection.QueryFirstAsync<T>(sqlCommand);
+
+            }
+            catch
+            {
+                return default;
+            }
+        }
     }
 }
