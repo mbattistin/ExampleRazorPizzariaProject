@@ -29,32 +29,51 @@ namespace ExampleRazorPizzariaProject.Pages.Forms
             Order = new OrderModel();
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Pizza = await _repository.GetAsync<PizzaModel>($"select * from Pizza where Id={PizzaId}");
-            var toppings = await _repository.ListAsync<ToppingModel>($"SELECT t.* FROM pizzas.pizza_topping as pt join pizzas.topping as t on pt.IdTopping = t.Id where pt.IdPizza = {PizzaId}");
-            PizzaToppings = String.Join(", ", toppings.Select(t => t.Name));
+            try
+            {
+                if (PizzaId <=0 )
+                    return RedirectToPage("/Error");
 
-            var query = "select * from topping order by Name";
-            AvailableToppings = await _repository.ListAsync<ToppingModel>(query);
+                Pizza = await _repository.GetAsync<PizzaModel>($"select * from Pizza where Id={PizzaId}");
+                var toppings = await _repository.ListAsync<ToppingModel>($"SELECT t.* FROM pizzas.pizza_topping as pt join pizzas.topping as t on pt.IdTopping = t.Id where pt.IdPizza = {PizzaId}");
+                PizzaToppings = String.Join(", ", toppings.Select(t => t.Name));
+
+                var query = "select * from topping order by Name";
+                AvailableToppings = await _repository.ListAsync<ToppingModel>(query);
+                return null;
+            }
+            catch
+            {
+                return RedirectToPage("/Error");
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var selectedToppings = AvailableToppings.Where(t => t.IsSelected == true);
-            var insertOrderquery = $"insert into pizzas.order (IdPizza, CustomerName, Address, TotalPrice) values ({PizzaId}, '{Order.CustomerName}', '{Order.Address}', " +
-                $"{Pizza.Price + selectedToppings.Sum(t => t.ToppingAditionalPrice)}); " +
-                $"SELECT LAST_INSERT_ID();";
-
-            var order = await _repository.SaveAsync<ulong>(insertOrderquery);
-
-            foreach (var topping in selectedToppings)
+            try
             {
-                var insertOrderTopping = $"insert into pizzas.order_topping (IdTopping, IdOrder) values ({topping.Id}, {order});SELECT LAST_INSERT_ID();";
-                await _repository.SaveAsync<ulong>(insertOrderTopping);
+                var selectedToppings = AvailableToppings.Where(t => t.IsSelected == true);
+                var insertOrderquery = $"insert into pizzas.order (IdPizza, CustomerName, Address, TotalPrice) values ({PizzaId}, '{Order.CustomerName}', '{Order.Address}', " +
+                    $"{Pizza.Price + selectedToppings.Sum(t => t.ToppingAditionalPrice)}); " +
+                    $"SELECT LAST_INSERT_ID();";
+
+                var order = await _repository.SaveAsync<ulong>(insertOrderquery);
+
+                foreach (var topping in selectedToppings)
+                {
+                    var insertOrderTopping = $"insert into pizzas.order_topping (IdTopping, IdOrder) values ({topping.Id}, {order});SELECT LAST_INSERT_ID();";
+                    await _repository.SaveAsync<ulong>(insertOrderTopping);
+                }
+
+                return RedirectToPage("/Checkout/Checkout", new { Order = order });
+            }
+            catch
+            {
+                return RedirectToPage("/Error");
             }
 
-            return RedirectToPage("/Checkout/Checkout", new { Order = order });
         }
     }
 }

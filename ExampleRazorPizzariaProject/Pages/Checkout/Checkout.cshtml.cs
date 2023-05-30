@@ -30,13 +30,16 @@ namespace ExampleRazorPizzariaProject.Pages.Checkout
 
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
             try
             {
+                if (OrderNumber <= 0)
+                    return RedirectToPage("/Error");
+
                 Order = await _repository.GetAsync<OrderModel>($"select * from pizzas.order where Id = {OrderNumber}");
 
-                if(Order.IdPizza != null)
+                if (Order.IdPizza != null)
                 {
                     Pizza = await _repository.GetAsync<PizzaModel>($"select * from pizzas.pizza where Id = {Order.IdPizza}");
                 }
@@ -44,10 +47,11 @@ namespace ExampleRazorPizzariaProject.Pages.Checkout
                 SelectedToppings = await _repository.ListAsync<ToppingModel>("SELECT t.* FROM pizzas.order_topping as ot " +
                     " join pizzas.topping as t on ot.IdTopping = t.Id " +
                     $" where ot.IdOrder = {Order.Id}");
+                return null;
             }
-            catch (Exception ex)
+            catch 
             {
-
+                return RedirectToPage("/Error");
             }
 
 

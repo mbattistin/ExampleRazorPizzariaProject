@@ -24,28 +24,44 @@ namespace ExampleRazorPizzariaProject.Pages.Forms
             _repository = repository;
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            var query = "select * from topping order by Name";
-            AvailableToppings = await _repository.ListAsync<ToppingModel>(query);
+            try
+            {
+                var query = "select * from topping order by Name";
+                AvailableToppings = await _repository.ListAsync<ToppingModel>(query);
+                return null;
+            }
+            catch
+            {
+                return RedirectToPage("/Error");
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var selectedToppings = AvailableToppings.Where(t => t.IsSelected == true);
-            var insertOrderquery = $"insert into pizzas.order (IdPizza, CustomerName, Address, TotalPrice) values (null, '{Order.CustomerName}', '{Order.Address}', " +
-                $"{BasePricePizza + selectedToppings.Sum(t => t.ToppingAditionalPrice)}); " +
-                $"SELECT LAST_INSERT_ID();";
-
-            var order = await _repository.SaveAsync<ulong>(insertOrderquery);
-
-            foreach (var topping in selectedToppings)
+            try
             {
-                var insertOrderTopping = $"insert into pizzas.order_topping (IdTopping, IdOrder) values ({topping.Id}, {order});SELECT LAST_INSERT_ID();";
-                await _repository.SaveAsync<ulong>(insertOrderTopping);
+                var selectedToppings = AvailableToppings.Where(t => t.IsSelected == true);
+                var insertOrderquery = $"insert into pizzas.order (IdPizza, CustomerName, Address, TotalPrice) values (null, '{Order.CustomerName}', '{Order.Address}', " +
+                    $"{BasePricePizza + selectedToppings.Sum(t => t.ToppingAditionalPrice)}); " +
+                    $"SELECT LAST_INSERT_ID();";
+
+                var order = await _repository.SaveAsync<ulong>(insertOrderquery);
+
+                foreach (var topping in selectedToppings)
+                {
+                    var insertOrderTopping = $"insert into pizzas.order_topping (IdTopping, IdOrder) values ({topping.Id}, {order});SELECT LAST_INSERT_ID();";
+                    await _repository.SaveAsync<ulong>(insertOrderTopping);
+                }
+
+                return RedirectToPage("/Checkout/Checkout", new { Order = order });
+            }
+            catch
+            {
+                return RedirectToPage("/Error");
             }
 
-            return RedirectToPage("/Checkout/Checkout", new { Order = order });
         }
     }
 }

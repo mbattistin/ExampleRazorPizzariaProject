@@ -33,6 +33,10 @@ body {
         transform:scale(1.02)
     }
 
+.primary-red-text {
+   color: rgb(189, 84, 58)
+}
+
 .custom-checkbox-color:checked {
     border-color: #ffc107;
     background-color: #ffc107;
