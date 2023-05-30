@@ -12,13 +12,15 @@
 		<div class="row mb-3">
 			<label for="name" class="col-sm-2 col-form-label">Your name:</label>
 			<div class="col-sm-8">
-				<input type="text" class="form-control" id="name" asp-for="Order.CustomerName">
+				<input type="text" class="form-control" id="name" asp-for="Order.CustomerName" maxlength="200" required>
+				<span asp-validation-for="Order.CustomerName" class="text-danger"></span>
 			</div>
 		</div>
 		<div class="row mb-3">
 			<label for="address" class="col-sm-2 col-form-label">Address for delivery:</label>
 			<div class="col-sm-8">
-				<input type="text" class="form-control" id="address" asp-for="Order.Address">
+				<input type="text" class="form-control" id="address" asp-for="Order.Address" maxlength="300" required>
+				<span asp-validation-for="Order.Address" class="text-danger"></span>
 			</div>
 		</div>
 		<div class="card mt-2 mb-2">
@@ -56,12 +58,7 @@
 
 @section Scripts{
 	<script>
-		$('.chkclass').click(function() {
-			var sum = @Model.BasePricePizza;
-			$('.chkclass:checked').each(function() {
-				sum += parseFloat($(this).closest('div').find('.valueToSum').text());
-			});
-			$('#sum').text(sum);
-		});</script>
-
+		var baseValueToSumPizzaTotalPrice = @Model.BasePricePizza;
+		<partial name="_ValidationScriptsPartial" />
+	</script>
 }
